@@ -1,1 +1,15 @@
-{}
+kodi_rec_shutdown:
+  sequence:
+    - action: kodi.call_method
+      target:
+        entity_id: media_player.kodi_rec_home
+      data:
+        method: System.Shutdown
+
+kodi_play_shutdown:
+  sequence:
+    - action: kodi.call_method
+      target:
+        entity_id: media_player.kodi_play_home
+      data:
+        method: System.Shutdown
