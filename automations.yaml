@@ -1,5 +1,5 @@
 - id: '1730546572911'
-  alias: TempOfficeRoomHigh
+  alias: Température bureau supérieure à 21°C
   description: ''
   triggers:
   - type: temperature
@@ -18,25 +18,27 @@
     metadata: {}
     data:
       message: Température bureau supérieure à 21°C durant plus de 10 minutes
-      title: TempOfficeRoomHigh
+      title: TempOfficeHigher21
   mode: single
 - id: '1731099424715'
-  alias: Volets Nuit
+  alias: Volets fermés crépuscule jours semaine
   description: ''
   triggers:
-  - trigger: time_pattern
-    hours: '17'
-    minutes: '45'
-    seconds: '00'
-  conditions: []
+  - trigger: sun
+    event: sunset
+    offset: 0
+  conditions:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
   actions:
   - device_id: 019b28ce2c08ce00c9e2adcc756c9012
     domain: cover
     entity_id: 93403091719d4bd06280c68e0de6b45d
-    type: close
-  - device_id: 3db54f0a592324fccf995c5470183ecd
-    domain: cover
-    entity_id: 39ea2dc9d17d399e360951a2ca6350c2
     type: close
   - device_id: 3d4c7737fcabac4c4ac6040a26590cd2
     domain: cover
@@ -60,8 +62,8 @@
     type: close
   mode: single
 - id: '1731653878971'
-  alias: Jour Semaine
-  description: ''
+  alias: Volets ouverts aurore jours travaillés semaine
+  description: 'Ouvrir les volets tous les jours travaillés de la semaine '
   triggers:
   - trigger: sun
     event: sunrise
@@ -79,49 +81,341 @@
     domain: cover
     entity_id: 39ea2dc9d17d399e360951a2ca6350c2
     type: open
+  - device_id: 019b28ce2c08ce00c9e2adcc756c9012
+    domain: cover
+    entity_id: 93403091719d4bd06280c68e0de6b45d
+    type: open
+  - device_id: 3d4c7737fcabac4c4ac6040a26590cd2
+    domain: cover
+    entity_id: 0699146805b458d4f5c23a87e95545c8
+    type: open
+  - device_id: 04083c3fb898f2df232f94e0ab47d2e0
+    domain: cover
+    entity_id: f4e07e675b7b145da57cf44dd189ddd6
+    type: open
+  - device_id: be38acbbe9c405a052ad33618abd9621
+    domain: cover
+    entity_id: d84d0448588d56f12177f317540edf1f
+    type: open
+  - device_id: bdd5ce77ced318d3085916e23b0b05c7
+    domain: cover
+    entity_id: 2631419f8573ad1f7250e925360ec31f
+    type: open
+  - device_id: 56f83d510988c7683bf2f994a0853e0c
+    domain: cover
+    entity_id: 7340e28c0e674a38b92d479523b97c5a
+    type: open
   mode: single
-- id: '1731779479899'
-  alias: Arrêt prise téléviseur salon
+- id: '1731858616075'
+  alias: Prise téléviseur salon Off minuit
+  description: 'Éteindre la prise du téléviseur du salon tout les jours à 0h00
+
+    Éteint au préalable les lecteurs multimédia'
+  triggers:
+  - trigger: time
+    at: 00:00:00
+  conditions: []
+  actions:
+  - sequence:
+    - action: script.kodi_rec_shutdown
+      metadata: {}
+      data: {}
+    - action: media_player.turn_off
+      metadata: {}
+      data: {}
+      target:
+        entity_id: media_player.liveboxplayersalon
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 30
+        milliseconds: 0
+    - type: turn_off
+      device_id: 7798644fa474e0ba899a499b84b2909b
+      entity_id: c9f51b9379a29b7c618f27e4eab95634
+      domain: switch
+  mode: single
+- id: '1731858875996'
+  alias: Prise téléviseur salon On jours semaine matin
+  description: Allumer la prise du téléviseur du salon à 7h du lundi au vendredi
+  triggers:
+  - trigger: time
+    at: 06:45:00
+  conditions:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  actions:
+  - sequence:
+    - type: turn_on
+      device_id: 7798644fa474e0ba899a499b84b2909b
+      entity_id: c9f51b9379a29b7c618f27e4eab95634
+      domain: switch
+    - delay:
+        hours: 0
+        minutes: 5
+        seconds: 0
+        milliseconds: 0
+    - action: media_player.turn_off
+      metadata: {}
+      data: {}
+      target:
+        entity_id: media_player.liveboxplayersalon
+    - action: script.kodi_rec_shutdown
+      metadata: {}
+      data: {}
+  mode: single
+- id: '1731870466262'
+  alias: Prise téléviseur salon Off jours semaine matin
+  description: 'Éteindre la prise du téléviseur du salon tout les jours à 0h00
+
+    Éteint au préalable les lecteurs multimédia'
+  triggers:
+  - trigger: time
+    at: 09:00:00
+  conditions:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  actions:
+  - sequence:
+    - action: script.kodi_rec_shutdown
+      metadata: {}
+      data: {}
+    - action: media_player.turn_off
+      metadata: {}
+      data: {}
+      target:
+        entity_id: media_player.liveboxplayersalon
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 30
+        milliseconds: 0
+    - type: turn_off
+      device_id: 7798644fa474e0ba899a499b84b2909b
+      entity_id: c9f51b9379a29b7c618f27e4eab95634
+      domain: switch
+  mode: single
+- id: '1731874146478'
+  alias: Prise téléviseur salon On midi
+  description: Allumer la prise du téléviseur du salon à midi
+  triggers:
+  - trigger: time
+    at: '12:00:00'
+  conditions:
+  - condition: time
+    weekday:
+    - mon
+    - wed
+    - fri
+  actions:
+  - sequence:
+    - type: turn_on
+      device_id: 7798644fa474e0ba899a499b84b2909b
+      entity_id: c9f51b9379a29b7c618f27e4eab95634
+      domain: switch
+    - delay:
+        hours: 0
+        minutes: 5
+        seconds: 0
+        milliseconds: 0
+    - action: media_player.turn_off
+      metadata: {}
+      data: {}
+      target:
+        entity_id: media_player.liveboxplayersalon
+  mode: single
+- id: '1731874210126'
+  alias: Prise téléviseur salon Off midi
+  description: 'Éteindre la prise du téléviseur du salon à 15h
+
+    Éteint au préalable les lecteurs multimédia'
+  triggers:
+  - trigger: time
+    at: '15:00:00'
+  conditions:
+  - condition: time
+    weekday:
+    - mon
+    - wed
+    - fri
+  actions:
+  - sequence:
+    - action: script.kodi_rec_shutdown
+      metadata: {}
+      data: {}
+    - action: media_player.turn_off
+      metadata: {}
+      data: {}
+      target:
+        entity_id: media_player.liveboxplayersalon
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 30
+        milliseconds: 0
+    - type: turn_off
+      device_id: 7798644fa474e0ba899a499b84b2909b
+      entity_id: c9f51b9379a29b7c618f27e4eab95634
+      domain: switch
+  mode: single
+- id: '1731874373456'
+  alias: Prise téléviseur salon On soir
+  description: Allumer la prise du téléviseur du salon les jours de la semaine à 20h
+  triggers:
+  - trigger: time
+    at: '20:00:00'
+  conditions:
+  - condition: time
+    weekday:
+    - mon
+    - wed
+    - fri
+    - tue
+    - thu
+  actions:
+  - sequence:
+    - type: turn_on
+      device_id: 7798644fa474e0ba899a499b84b2909b
+      entity_id: c9f51b9379a29b7c618f27e4eab95634
+      domain: switch
+    - delay:
+        hours: 0
+        minutes: 5
+        seconds: 0
+        milliseconds: 0
+    - action: media_player.turn_off
+      metadata: {}
+      data: {}
+      target:
+        entity_id: media_player.liveboxplayersalon
+  mode: single
+- id: '1732184110631'
+  alias: Volet bureau fermé 18h30
   description: ''
   triggers:
   - trigger: time
-    at: '19:50:00'
-    enabled: false
-  conditions: []
+    at: '18:30:00'
+  conditions:
+  - condition: time
+    weekday:
+    - mon
+    - wed
+    - fri
   actions:
-  - action: media_player.turn_off
-    metadata: {}
-    data: {}
-    target:
-      entity_id:
-      - media_player.liveboxmediaplayersalon
-      - media_player.kodi_rec
+  - device_id: 3db54f0a592324fccf995c5470183ecd
+    domain: cover
+    entity_id: 39ea2dc9d17d399e360951a2ca6350c2
+    type: close
   mode: single
-- id: '1731838690783'
-  alias: Livebox Player chambre stop
+- id: '1732184447993'
+  alias: Volet bureau fermé crépuscule
   description: ''
   triggers:
-  - trigger: time
-    at: '11:20:00'
-  conditions: []
+  - trigger: sun
+    event: sunset
+    offset: 0
+  conditions:
+  - condition: time
+    weekday:
+    - tue
+    - thu
   actions:
-  - action: media_player.turn_off
-    metadata: {}
-    data: {}
-    target:
-      entity_id: media_player.liveboxplayerchambre
+  - device_id: 3db54f0a592324fccf995c5470183ecd
+    domain: cover
+    entity_id: 39ea2dc9d17d399e360951a2ca6350c2
+    type: close
   mode: single
-- id: '1731838763339'
-  alias: Kodi Play stop
+- id: '1732289631092'
+  alias: Volet ouverture absence weekend
   description: ''
   triggers:
-  - trigger: time
-    at: '11:22:00'
-  conditions: []
+  - trigger: sun
+    event: sunrise
+    offset: 0
+  conditions:
+  - condition: time
+    weekday:
+    - sat
+    - sun
   actions:
-  - action: media_player.turn_off
-    metadata: {}
-    data: {}
-    target:
-      entity_id: media_player.kodi_play
+  - device_id: 019b28ce2c08ce00c9e2adcc756c9012
+    domain: cover
+    entity_id: 93403091719d4bd06280c68e0de6b45d
+    type: open
+  - device_id: 3db54f0a592324fccf995c5470183ecd
+    domain: cover
+    entity_id: 39ea2dc9d17d399e360951a2ca6350c2
+    type: open
+  - device_id: 3d4c7737fcabac4c4ac6040a26590cd2
+    domain: cover
+    entity_id: 0699146805b458d4f5c23a87e95545c8
+    type: open
+  - device_id: 04083c3fb898f2df232f94e0ab47d2e0
+    domain: cover
+    entity_id: f4e07e675b7b145da57cf44dd189ddd6
+    type: open
+  - device_id: be38acbbe9c405a052ad33618abd9621
+    domain: cover
+    entity_id: d84d0448588d56f12177f317540edf1f
+    type: open
+  - device_id: bdd5ce77ced318d3085916e23b0b05c7
+    domain: cover
+    entity_id: 2631419f8573ad1f7250e925360ec31f
+    type: open
+  - device_id: 56f83d510988c7683bf2f994a0853e0c
+    domain: cover
+    entity_id: 7340e28c0e674a38b92d479523b97c5a
+    type: open
+  mode: single
+- id: '1732289771181'
+  alias: Volet fermeture absence weekend
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunset
+    offset: 0
+  conditions:
+  - condition: time
+    weekday:
+    - sat
+    - sun
+  actions:
+  - device_id: 019b28ce2c08ce00c9e2adcc756c9012
+    domain: cover
+    entity_id: 93403091719d4bd06280c68e0de6b45d
+    type: close
+  - device_id: 3db54f0a592324fccf995c5470183ecd
+    domain: cover
+    entity_id: 39ea2dc9d17d399e360951a2ca6350c2
+    type: close
+  - device_id: 3d4c7737fcabac4c4ac6040a26590cd2
+    domain: cover
+    entity_id: 0699146805b458d4f5c23a87e95545c8
+    type: close
+  - device_id: 04083c3fb898f2df232f94e0ab47d2e0
+    domain: cover
+    entity_id: f4e07e675b7b145da57cf44dd189ddd6
+    type: close
+  - device_id: be38acbbe9c405a052ad33618abd9621
+    domain: cover
+    entity_id: d84d0448588d56f12177f317540edf1f
+    type: close
+  - device_id: bdd5ce77ced318d3085916e23b0b05c7
+    domain: cover
+    entity_id: 2631419f8573ad1f7250e925360ec31f
+    type: close
+  - device_id: 56f83d510988c7683bf2f994a0853e0c
+    domain: cover
+    entity_id: 7340e28c0e674a38b92d479523b97c5a
+    type: close
   mode: single

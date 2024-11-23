@@ -23,16 +23,17 @@ media_player:
     scan_interval: 30
     country: france
 
-remote:
-  - platform: liveboxtvuhd
-    name: LiveboxPlayerSalon
-    host: 192.168.7.107
-    port: 8080
-    scan_interval: 30
-    country: france
-  - platform: liveboxtvuhd
-    name: LiveboxPlayerChambre
-    host: 192.168.7.108
-    port: 8080
-    scan_interval: 30
-    country: france
+# remote:
+#   - platform: liveboxtvuhd
+#     name: LiveboxPlayerSalon
+#     host: 192.168.7.107
+#     port: 8080
+#     scan_interval: 30
+#     country: france
+#   - platform: liveboxtvuhd
+#     name: LiveboxPlayerChambre
+#     host: 192.168.7.108
+#     port: 8080
+#     scan_interval: 30
+#     country: france
+
